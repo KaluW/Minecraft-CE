@@ -7,7 +7,7 @@
 #include "images.h"
 #include "defines.h"
 
-gfx_sprite_t *tileset_tiles[MAX_TILE_COUNT];
+gfx_sprite_t *tileset_tiles[MAX_BLOCK_TILE_COUNT];
 
 void extract_tiles(void) {
 	
@@ -36,7 +36,7 @@ void extract_tiles(void) {
 	// get the empty tile
 	empty_tile = (gfx_sprite_t*)tmp_ptr;
 	
-	for(i = 0; i < MAX_TILE_COUNT; i ++) {
+	for(i = 0; i < MAX_BLOCK_TILE_COUNT; i ++) {
 		tiles[i] = empty_tile;
 	}
 	

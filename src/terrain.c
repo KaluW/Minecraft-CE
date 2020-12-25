@@ -8,8 +8,6 @@
 #include "defines.h"
 #include "images.h"
 
-block_t blocks[TILE_COUNT];
-
 void updateTerrain(void) {
 	
 	/*

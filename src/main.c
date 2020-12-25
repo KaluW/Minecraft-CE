@@ -12,6 +12,7 @@
 #include <graphx.h>
 #include <keypadc.h>
 
+#include "data.h"
 #include "defines.h"
 #include "images.h"
 #include "interactions.h"

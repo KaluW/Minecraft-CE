@@ -12,7 +12,7 @@ converts:
       tile-height: 16
       pointer-table: false
       images:
-        - MC_Tileset.png
+        - MC_Tileset (v1.1).png
     
 outputs:
   - type: appvar

@@ -6,8 +6,8 @@
 #include <stdint.h>
 #include <tice.h>
 
-#define TILE_COUNT 80
-#define MAX_TILE_COUNT 128
+#define TILE_COUNT 32
+#define MAX_BLOCK_TILE_COUNT 32
 
 #define TILE_EMPTY 0
 
