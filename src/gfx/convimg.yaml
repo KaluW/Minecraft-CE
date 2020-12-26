@@ -1,19 +1,22 @@
 palettes:
-  - name: tileset_palette
+  - name: palette
     fixed-entries:
-      - color: {index: 0, r: 255, g: 255, b: 255}
+      - color: { index: 0, r: 255, g: 255, b: 255 }
+      - color: { index: 1, r: 23, g: 220, b: 254 }
     images: automatic
 
 converts:
   - name: tileset
-    palette: tileset_palette
+    palette: palette
+    transparent-color-index: 0
     tilesets:
       tile-width: 16
       tile-height: 16
       pointer-table: false
       images:
-        - MC_Tileset (v1.1).png
-    
+        - MC_Tileset (v1.2)
+
+
 outputs:
   - type: appvar
     name: MCT
@@ -23,7 +26,7 @@ outputs:
     converts:
       - tileset
     palettes:
-      - tileset_palette
+      - palette
 
 
 

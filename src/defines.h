@@ -6,6 +6,11 @@
 #include <stdint.h>
 #include <tice.h>
 
+// constant members of the Linear Congruential Generator (LCG) - Used in randomnizing terrain
+#define LCG_M 2147483648
+#define LCG_A 1664525
+#define LCG_C 1
+
 #define TILE_COUNT 32
 #define MAX_BLOCK_TILE_COUNT 32
 

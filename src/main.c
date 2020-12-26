@@ -23,6 +23,7 @@
 player_t player;
 game_t game;
 
+extern unsigned char chunk_map[];
 bool inGame = false; // will replace with game.exit
 
 // Almost want to shove these into its own module
@@ -78,6 +79,7 @@ void keypad_handler(void) {
 	
 }
 
+/*
 void main(void) {
 
 	gfx_Begin( gfx_8bpp );
@@ -85,7 +87,6 @@ void main(void) {
 	
 	extract_tiles();
 	
-	/*
 	
 	extract_sprites();
 	
@@ -97,12 +98,109 @@ void main(void) {
 		
 	}
 	
-	*/
+	generateChunk();
+	
+	// Should have some sort of universal exit function here
+}
+*/
+
+void main(void)
+{
+	sk_key_t key;
+    unsigned int x_offset = 0;
+    unsigned int y_offset = (CHUNK_HEIGHT / 2) * TILE_HEIGHT;
+    gfx_tilemap_t tilemap;
+	
+	tilemap.map         = chunk_map;
+    tilemap.tiles       = tileset_tiles;
+    tilemap.type_width  = gfx_tile_16_pixel;
+    tilemap.type_height = gfx_tile_16_pixel;
+    tilemap.tile_height = TILE_HEIGHT;
+    tilemap.tile_width  = TILE_WIDTH;
+    tilemap.draw_height = TILEMAP_DRAW_HEIGHT;
+    tilemap.draw_width  = TILEMAP_DRAW_WIDTH;
+    tilemap.height      = CHUNK_HEIGHT;
+    tilemap.width       = CHUNK_WIDTH;
+    tilemap.y_loc       = 0;
+    tilemap.x_loc       = 0;
+	
+	srand(rtc_Time());
+	gfx_Begin();
+	
+	extract_tiles();
 	
 	generateChunk();
 	
-	/* Should have some sort of universal exit function here */
+	gfx_FillScreen(1);
+    gfx_SetColor(1);
+    gfx_SetTextFGColor(0);
+    gfx_SetTextBGColor(1);
+
+    /* Draw to buffer to avoid tearing */
+    gfx_SetDrawBuffer();
+
+    /* Set monospace font with width of 8 */
+    gfx_SetMonospaceFont(8);
+	
+	do
+    {
+
+        /* Get the key */
+        key = os_GetCSC();
+		
+		// Draw sky
+		gfx_FillScreen(1);
+		
+        /* Draw tilemap and coords */
+        gfx_TransparentTilemap(&tilemap, x_offset, y_offset);
+        gfx_FillRectangle(0, 0, 320, 16);
+        gfx_PrintStringXY("x offset:", 48, 4);
+        gfx_PrintUInt(x_offset, 4);
+        gfx_PrintString(" y offset:");
+        gfx_PrintUInt(y_offset, 4);
+
+        /* Do something based on the keypress */
+        switch (key)
+        {
+            case sk_Down:
+                if (y_offset < (CHUNK_HEIGHT * TILE_HEIGHT) - (TILEMAP_DRAW_HEIGHT * TILE_HEIGHT))
+                {
+                    y_offset += TILE_HEIGHT;
+                }
+                break;
+
+            case sk_Left:
+                if (x_offset)
+                {
+                    x_offset -= TILE_WIDTH;
+                }
+                break;
+
+            case sk_Right:
+                if (x_offset < (CHUNK_WIDTH * TILE_WIDTH) - (TILEMAP_DRAW_WIDTH * TILE_WIDTH))
+                {
+                    x_offset += TILE_WIDTH;
+                }
+                break;
+
+            case sk_Up:
+                if (y_offset)
+                {
+                    y_offset -= TILE_HEIGHT;
+                }
+                break;
+
+            default:
+                break;
+        }
+
+        gfx_SwapDraw();
+
+    } while (key != sk_Enter);
+	
+	gfx_End();	
 }
+
 
 void titleMenu(void) {
 	
