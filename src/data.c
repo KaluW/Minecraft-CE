@@ -10,44 +10,43 @@
 // Need a BED entity, b/c I can't use BED_LEFT_SIDE or BED_RIGHT_SIDE to describe the bed as a whole :P
 // Make sure to take care of both halves of an object if they take up more than one tile (beds, doors, etc.)
 
+
 block_t blocks[MAX_BLOCK_TILE_COUNT] = {
 	
-//	 (Single) Yield		Required Tool			Best Tool		Hardness		onClick						onUpdate			
-	{ NO_YIELD,			NO_TOOL,				None,			NO_HARDNESS,	NULL,						NULL					}, // AIR
-	{ COBBLESTONE,		WOODEN_PICKAXE,			Pickaxe,		10,				NULL,						NULL					}, // STONE
-	{ DIRT,				NO_TOOL,				Shovel,			3,				NULL,						NULL					}, // GRASS
-	{ DIRT,				NO_TOOL,				Shovel,			2,				NULL,						NULL					}, // DIRT
-	{ COBBLESTONE,		WOODEN_PICKAXE,			Pickaxe,		10,				NULL,						NULL					}, // COBBLESTONE
-	{ COAL_ORE,			WOODEN_PICKAXE,			Pickaxe,		15,				NULL,						NULL					}, // COAL_ORE
-	{ DIAMOND_ORE,		IRON_PICKAXE,			Pickaxe,		15,				NULL,						NULL					}, // DIAMOND_ORE
-	{ GOLD_ORE,			IRON_PICKAXE,			Pickaxe,		15,				NULL,						NULL					}, // GOLD_ORE
-	{ IRON_ORE,			STONE_PICKAXE,			Pickaxe,		15,				NULL,						NULL					}, // IRON_ORE
-	{ NO_YIELD,			NO_TOOL,				None,			NO_HARDNESS,	NULL,						NULL					}, // BEDROCK
-	{ OAK_SAPLING,		NO_TOOL,				None,			NO_HARDNESS,	NULL,						NULL					}, // OAK_SAPLING
-	{ OAK_LOG,			NO_TOOL,				Axe,			10,				NULL,						NULL					}, // OAK_LOG
-	{ OAK_PLANK,		NO_TOOL,				Axe,			10,				NULL,						NULL					}, // OAK_PLANK
-	{ LEAVES,			SHEARS,					Shears,			1,				NULL,						NULL					}, // LEAVES
-	{ SAND,				NO_TOOL,				None,			2,				NULL,						gravityBlock_onUpdate	}, // SAND
-	{ SANDSTONE,		WOODEN_PICKAXE,			Pickaxe,		4,				NULL,						NULL					}, // SANDSTONE
-	{ CACTUS,			NO_TOOL,				None,			3,				equalEfficiency_onClick,	NULL					}, // CACTUS
-	{ CRAFTING_TABLE,	NO_TOOL,				Axe,			12,				craftingTable_onClick,		NULL					}, // CRAFTING_TABLE
-	{ CHEST,			NO_TOOL,				Axe,			21,				chest_onClick,				NULL					}, // CHEST
-	{ FURNACE,			WOODEN_PICKAXE,			Pickaxe,		17,				furnace_onClick,			NULL					}, // FURNACE_OFF
-	{ FURNACE,			WOODEN_PICKAXE,			Pickaxe,		17,				furnace_onClick,			NULL					}, // FURNACE_ON
-	{ NO_YIELD,			NO_TOOL,				None,			NO_HARDNESS,	deadBush_onClick,			NULL					}, // DEAD_BUSH
-	{ FLOWER_YELLOW,	NO_TOOL,				None,			NO_HARDNESS,	NULL,						waterPresence_onUpdate	}, // FLOWER_YELLOW
-	{ FLOWER_RED,		NO_TOOL,				None,			NO_HARDNESS,	NULL,						waterPresence_onUpdate	}, // FLOWER_RED
-	{ FLOWER_PINK,		NO_TOOL,				None,			NO_HARDNESS,	NULL,						waterPresence_onUpdate	}, // FLOWER_PINK
-	{ BED,				NO_TOOL,				None,			1,				bed_onClick,				NULL					}, // BED_LEFT_SIDE
-	{ BED,				NO_TOOL,				None,			1,				bed_onClick,				NULL					}, // BED_RIGHT_SIDE
-	{ OAK_DOOR,			NO_TOOL,				Axe,			15,				door_onClick,				NULL					}, // OAK_DOOR_BOTTOM
-	{ OAK_DOOR,			NO_TOOL,				Axe,			15,				door_onClick,				NULL					}, // OAK_DOOR_TOP
-	{ LADDER,			NO_TOOL,				Axe,			2,				NULL,						NULL					}, // LADDER
-	{ NO_YIELD,			NO_TOOL,				None,			NO_HARDNESS,	water_onClick,				water_onUpdate			}, // WATER
-	{ NO_YIELD,			NO_TOOL,				None,			NO_HARDNESS,	lava_onClick,				lava_onUpdate			} // LAVA
+	[AIR]   			= { .yield = NO_YIELD, 			.required_tool = NO_TOOL, 			.best_tool = None, 		.hardness = NO_HARDNESS,	.onClick = NULL, 					.onUpdate = NULL 					},
+	[STONE]   			= { .yield = COBBLESTONE, 		.required_tool = WOODEN_PICKAXE,	.best_tool = Pickaxe, 	.hardness = 10, 			.onClick = NULL, 					.onUpdate = NULL 					},
+	[GRASS]				= { .yield = DIRT, 				.required_tool = NO_TOOL, 			.best_tool = Shovel, 	.hardness = 3, 				.onClick = NULL, 					.onUpdate = NULL 					},
+	[DIRT]				= { .yield = DIRT, 				.required_tool = NO_TOOL, 			.best_tool = Shovel, 	.hardness = 2,				.onClick = NULL, 					.onUpdate = NULL 					},
+	[COBBLESTONE]		= { .yield = COBBLESTONE, 		.required_tool = WOODEN_PICKAXE,	.best_tool = Pickaxe, 	.hardness = 10, 			.onClick = NULL, 					.onUpdate = NULL 					},
+	[COAL_ORE]			= { .yield = COAL_ORE, 			.required_tool = WOODEN_PICKAXE,	.best_tool = Pickaxe, 	.hardness = 15, 			.onClick = NULL, 					.onUpdate = NULL 					},
+	[DIAMOND_ORE]		= { .yield = DIAMOND_ORE, 		.required_tool = IRON_PICKAXE, 		.best_tool = Pickaxe, 	.hardness = 15, 			.onClick = NULL, 					.onUpdate = NULL 					},
+	[GOLD_ORE]			= { .yield = GOLD_ORE, 			.required_tool = IRON_PICKAXE, 		.best_tool = Pickaxe, 	.hardness = 15, 			.onClick = NULL, 					.onUpdate = NULL 					},
+	[IRON_ORE]			= { .yield = IRON_ORE, 			.required_tool = STONE_PICKAXE, 	.best_tool = Pickaxe, 	.hardness = 15, 			.onClick = NULL, 					.onUpdate = NULL 					},
+	[BEDROCK]			= { .yield = NO_YIELD, 			.required_tool = NO_TOOL, 			.best_tool = None, 		.hardness = NO_HARDNESS,	.onClick = NULL, 					.onUpdate = NULL 					},
+	[OAK_SAPLING]		= { .yield = OAK_SAPLING, 		.required_tool = NO_TOOL, 			.best_tool = None, 		.hardness = NO_HARDNESS,	.onClick = NULL, 					.onUpdate = NULL 					},
+	[OAK_LOG]			= { .yield = OAK_LOG, 			.required_tool = NO_TOOL, 			.best_tool = Axe, 		.hardness = 10, 			.onClick = NULL, 					.onUpdate = NULL 					},
+	[OAK_PLANK]			= { .yield = OAK_PLANK, 		.required_tool = NO_TOOL, 			.best_tool = Axe, 		.hardness = 10, 			.onClick = NULL, 					.onUpdate = NULL 					},
+	[LEAVES]			= { .yield = LEAVES, 			.required_tool = SHEARS, 			.best_tool = Shears, 	.hardness = 1, 				.onClick = NULL, 					.onUpdate = NULL 					},
+	[SAND]				= { .yield = SAND, 				.required_tool = NO_TOOL, 			.best_tool = Shovel, 	.hardness = 2, 				.onClick = NULL, 					.onUpdate = gravityBlock_onUpdate 	},
+	[SANDSTONE]			= { .yield = SANDSTONE, 		.required_tool = WOODEN_PICKAXE,	.best_tool = Pickaxe, 	.hardness = 4, 				.onClick = NULL, 					.onUpdate = NULL 					},
+	[CACTUS]			= { .yield = CACTUS, 			.required_tool = NO_TOOL,			.best_tool = None, 		.hardness = 3, 				.onClick = equalToolEffic_onClick, 	.onUpdate = NULL					},
+	[CRAFTING_TABLE]	= { .yield = CRAFTING_TABLE,	.required_tool = NO_TOOL, 			.best_tool = Axe, 		.hardness = 12, 			.onClick = craftingTable_onClick, 	.onUpdate = NULL 					},
+	[CHEST]				= { .yield = CHEST, 			.required_tool = NO_TOOL, 			.best_tool = Axe, 		.hardness = 21, 			.onClick = chest_onClick, 			.onUpdate = NULL					},
+	[FURNACE_OFF]		= { .yield = FURNACE, 			.required_tool = WOODEN_PICKAXE,	.best_tool = Pickaxe, 	.hardness = 17, 			.onClick = furnace_onClick,			.onUpdate = NULL 					},
+	[FURNACE_ON]		= { .yield = FURNACE, 			.required_tool = WOODEN_PICKAXE,	.best_tool = Pickaxe, 	.hardness = 17, 			.onClick = furnace_onClick, 		.onUpdate = NULL 					},
+	[DEAD_BUSH]			= { .yield = NO_YIELD, 			.required_tool = NO_TOOL, 			.best_tool = None, 		.hardness = NO_HARDNESS,	.onClick = deadBush_onClick, 		.onUpdate = NULL 					},
+	[FLOWER_YELLOW]		= { .yield = FLOWER_YELLOW, 	.required_tool = NO_TOOL,			.best_tool = None, 		.hardness = NO_HARDNESS,	.onClick = NULL, 					.onUpdate = waterPresence_onUpdate 	},
+	[FLOWER_RED]		= { .yield = FLOWER_RED, 		.required_tool = NO_TOOL,			.best_tool = None, 		.hardness = NO_HARDNESS,	.onClick = NULL, 					.onUpdate = waterPresence_onUpdate 	},
+	[FLOWER_PINK]		= { .yield = FLOWER_PINK,		.required_tool = NO_TOOL,			.best_tool = None, 		.hardness = NO_HARDNESS,	.onClick = NULL, 					.onUpdate = waterPresence_onUpdate 	},
+	[BED_LEFT_SIDE]		= { .yield = BED,				.required_tool = NO_TOOL,			.best_tool = None, 		.hardness = 1,				.onClick = bed_onClick, 			.onUpdate = NULL 					},
+	[BED_RIGHT_SIDE]	= { .yield = BED,				.required_tool = NO_TOOL,			.best_tool = None, 		.hardness = 1,				.onClick = bed_onClick, 			.onUpdate = NULL 					},
+	[OAK_DOOR_BOTTOM]	= { .yield = OAK_DOOR,			.required_tool = NO_TOOL,			.best_tool = Axe, 		.hardness = 15,				.onClick = door_onClick, 			.onUpdate = NULL 					},
+	[OAK_DOOR_TOP]		= { .yield = OAK_DOOR,			.required_tool = NO_TOOL,			.best_tool = Axe, 		.hardness = 15,				.onClick = door_onClick, 			.onUpdate = NULL 					},
+	[LADDER]			= { .yield = LADDER,			.required_tool = NO_TOOL,			.best_tool = Axe, 		.hardness = 2,				.onClick = NULL, 					.onUpdate = NULL 					},
+	[WATER]				= { .yield = NO_YIELD,			.required_tool = NO_TOOL,			.best_tool = None, 		.hardness = NO_HARDNESS,	.onClick = water_onClick, 			.onUpdate = water_onUpdate 			},
+	[LAVA]				= { .yield = NO_YIELD,			.required_tool = NO_TOOL,			.best_tool = None, 		.hardness = NO_HARDNESS,	.onClick = lava_onClick, 			.onUpdate = lava_onUpdate 			}
 	
 };
-
 
 
 void bed_onClick(void) { }
@@ -55,7 +54,7 @@ void chest_onClick(void) { }
 void craftingTable_onClick(void) { }
 void deadBush_onClick(void) { }
 void door_onClick(void) { }
-void equalEfficiency_onClick(void) { }
+void equalToolEffic_onClick(void) { }
 void furnace_onClick(void) { }
 void lava_onClick(void) { }
 void water_onClick(void) { }

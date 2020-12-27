@@ -104,7 +104,7 @@ void chest_onClick(void);
 void craftingTable_onClick(void);
 void deadBush_onClick(void);
 void door_onClick(void);
-void equalEfficiency_onClick(void);
+void equalToolEffic_onClick(void);
 void furnace_onClick(void);
 void lava_onClick(void);
 void water_onClick(void);

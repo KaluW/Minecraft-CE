@@ -1,15 +1,16 @@
-# ----------------------------
-# Program Options
+NAME ?= MNCRFT
+ICON ?= iconc.png
+DESCRIPTION ?= "Minecraft CE"
+COMPRESSED ?= NO
+ARCHIVED ?= NO
+
+CFLAGS ?= -Wall -Wextra -Oz
+CXXFLAGS ?= -Wall -Wextra -Oz
+
 # ----------------------------
 
-NAME         ?= MNCRFT
-ICON         ?= iconc.png
-DESCRIPTION  ?= "Minecraft"
-COMPRESSED   ?= NO
-ARCHIVED     ?= NO
+ifndef CEDEV
+$(error CEDEV environment path variable is not set)
+endif
 
-# ----------------------------
-# Debug Options
-# ----------------------------
-
-include $(CEDEV)/include/.makefile
+include $(CEDEV)/meta/makefile.mk

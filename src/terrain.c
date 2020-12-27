@@ -32,42 +32,38 @@ void generateChunk(void) {
 	- Remember to incorporate new chunk into the Overworld Array
 	*/
 	
-	uint8_t x = 0; // position along chunk
-	uint8_t amp; // amplitude - height of curve
-	uint8_t wl; // wavelength - width of curve
-	uint8_t i, j, k; // for() loop vars
 	uint8_t yOffset; // position up or down from "default" height of terrain;
 	
 	float y; // (x, y) determines the top block in a given column in the chunk modeled by the curve pattern
-	float pointA, pointB, z; 
+	float pA, pB, z; // interpolate curve line between 'pA' (point A) and 'pB' (point B) using random 'z'
+	uint8_t amp = 8, wl = 3; // amplitude and wavelength
 	
 	y = CHUNK_HEIGHT;	
-    yOffset = CHUNK_HEIGHT / 2;  // "default" height of terrain (the middle of the chunk)
+    yOffset = CHUNK_HEIGHT / 2;  // "default" height of terrain (the middle of the chunk - 64 blocks down)
 	
 	z = rand_0_1() * LCG_M;
-    pointA = randFunc(LCG_M, LCG_A, LCG_C, &z),
-    pointB = randFunc(LCG_M, LCG_A, LCG_C, &z);
+    pA = randomize(&z),
+    pB = randomize(&z);
 	
-	amp = 8, wl = 3; // Should adjust this according to biome eventually
-    
-    while(x < CHUNK_WIDTH) // Go through each column in chunk and fill in terrain accordingly
+
+    for(uint8_t x = 0; x < CHUNK_WIDTH; x ++) // Go through each 'x' column in chunk and fill in terrain accordingly
 	{
         if(x % wl == 0) 
         {
-			// Randomnize curve shape after every period
-            pointA = pointB;
-            pointB = randFunc(LCG_M, LCG_A, LCG_C, &z);
-            y = CHUNK_HEIGHT + pointA * amp - yOffset;
+			// Randomize curve shape after every period
+            pA = pB;
+            pB = randomize(&z);
+            y = CHUNK_HEIGHT + pA * amp - yOffset;
 			
         } else
 		{
 			// model top block in terrain along curve shape
-            y = CHUNK_HEIGHT + interpolate(pointA, pointB, ((x % wl) / (float)wl)) * amp - yOffset;
+            y = CHUNK_HEIGHT + interpolate(pA, pB, ((x % wl) / (float)wl)) * amp - yOffset;
 			
         }
 				
 		//Store the terrain in a 32x128 tilemap chunk
-		for(i = 0; i < y; i ++) // fill in blocks over the top block accordingly
+		for(uint8_t i = 0; i < y; i ++) // fill in blocks over the top block accordingly
 		{
 			if (chunk_map[CHUNK_WIDTH * i + x] < 1) //if the current tile isn't already defined; used for pregenerated features like trees
 				chunk_map[CHUNK_WIDTH * i + x] = AIR;
@@ -76,22 +72,20 @@ void generateChunk(void) {
 		
 		fillInTerrain(x, (uint8_t)y); // fill in blocks under the top block 
 		
-        x ++;
     }  
 }
 void fillInTerrain(uint8_t x, uint8_t y)
 {
-	uint8_t i, j, dirtLayer;
 	
-	dirtLayer = randInt(2,4);
+	uint8_t dirtLayer = randInt(2,4);
 	
 	chunk_map[CHUNK_WIDTH * y + x] = GRASS;
 	
-	for(i = y + 1; i < y + dirtLayer; i ++)
+	for(uint8_t i = y + 1; i < y + dirtLayer; i ++)
 		chunk_map[CHUNK_WIDTH * i + x] = DIRT;
 	
-	for(j = y + dirtLayer; j < CHUNK_HEIGHT; j ++)
-		chunk_map[CHUNK_WIDTH*j + x] = STONE;
+	for(uint8_t i = y + dirtLayer; i < CHUNK_HEIGHT; i ++)
+		chunk_map[CHUNK_WIDTH * i + x] = STONE;
 		
 	chunk_map[CHUNK_WIDTH* (CHUNK_HEIGHT - 1) +x] = BEDROCK;
 }
@@ -101,17 +95,21 @@ float rand_0_1(void)
 	return (float) rand() / ((float) RAND_MAX + 1);
 }
  
-float randFunc(uint32_t M, uint32_t A, uint32_t C, float *z)
+float randomize(float *z)
 {
+	// for some reason if I use the #define directly, the chunk generation no longer works properly?
+	uint32_t M = LCG_M, A = LCG_A, C = LCG_C; 
+	
+	// I actually have no idea why this code does exactly what is does :P
 	float zd = *z - floor(*z);
 	*z = (A * (int)*z + C) % M + zd;
 	return (*z + zd) / (float)M - 0.5;
 
 }
  
-float interpolate(float pa, float pb, float px)
+float interpolate(float pA, float pB, float pX)
 {
-    float f = (1 - cos(px * M_PI)) * 0.5;
+    float f = (1 - cos(pX * M_PI)) * 0.5;
          
-    return pa * (1 - f) + pb * f;
+    return pA * (1 - f) + pB * f;
 }
