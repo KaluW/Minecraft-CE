@@ -23,7 +23,7 @@
 player_t player;
 game_t game;
 
-extern unsigned char chunk_map[];
+extern unsigned char world_map[];
 bool inGame = false; // will replace with game.exit
 
 // Almost want to shove these into its own module
@@ -106,12 +106,13 @@ void main(void) {
 
 void main(void)
 {
+	
 	sk_key_t key;
     unsigned int x_offset = 0;
     unsigned int y_offset = (CHUNK_HEIGHT / 2) * TILE_HEIGHT;
     gfx_tilemap_t tilemap;
-	
-	tilemap.map         = chunk_map;
+		
+	tilemap.map         = world_map;
     tilemap.tiles       = tileset_tiles;
     tilemap.type_width  = gfx_tile_16_pixel;
     tilemap.type_height = gfx_tile_16_pixel;
@@ -129,7 +130,7 @@ void main(void)
 	
 	extract_tiles();
 	
-	generateChunk();
+	generateWorld();
 	
 	gfx_FillScreen(1);
     gfx_SetColor(1);
@@ -222,7 +223,7 @@ void optionsMenu(void) {
 
 void createNewWorld(void) {
 
-	generateChunk(); 
+	generateWorld(); 
 	spawnMobs();
 	
 	// Other stuff to setup world

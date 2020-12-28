@@ -9,10 +9,13 @@
 #define CHUNK_WIDTH 	32
 #define CHUNK_HEIGHT	128
 
-void updateTerrain(void);
-void generateChunk(void);
+#define CHUNKS 5
 
-void fillInTerrain(uint8_t x, uint8_t y);
+void updateTerrain(void);
+
+void generateWorld(void);
+void generateChunk(uint8_t offset);
+
 float rand_0_1(void);
 float randomize(float *z);
 float interpolate(float pointA, float pointB, float pointX);

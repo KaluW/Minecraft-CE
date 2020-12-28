@@ -10,7 +10,8 @@
 #include "images.h"
 
 // Store all the terrain here
-unsigned char chunk_map[CHUNK_WIDTH * CHUNK_HEIGHT];
+unsigned char world_map[CHUNK_WIDTH * CHUNK_HEIGHT * CHUNKS];
+
 	
 void updateTerrain(void) {
 	
@@ -25,18 +26,20 @@ void updateTerrain(void) {
 	*/
 }
 
-void generateChunk(void) {
+void generateWorld(void) {
 	
-	/*
-	- Incorporate chunk generator and its child functions here
-	- Remember to incorporate new chunk into the Overworld Array
-	*/
+	for(uint8_t i = 0; i < CHUNKS; i ++)
+		generateChunk(i * CHUNK_WIDTH * CHUNK_HEIGHT);
 	
-	uint8_t yOffset; // position up or down from "default" height of terrain;
+}
+
+void generateChunk(uint8_t offset) {
+		
+	uint8_t yOffset; // position up or down from "default" height of terrain - used to connect different chunks together;
 	
 	float y; // (x, y) determines the top block in a given column in the chunk modeled by the curve pattern
 	float pA, pB, z; // interpolate curve line between 'pA' (point A) and 'pB' (point B) using random 'z'
-	uint8_t amp = 8, wl = 3; // amplitude and wavelength
+	uint8_t amp = randInt(2,12), wl = randInt(1, 10); // amplitude and wavelength
 	
 	y = CHUNK_HEIGHT;	
     yOffset = CHUNK_HEIGHT / 2;  // "default" height of terrain (the middle of the chunk - 64 blocks down)
@@ -61,33 +64,37 @@ void generateChunk(void) {
             y = CHUNK_HEIGHT + interpolate(pA, pB, ((x % wl) / (float)wl)) * amp - yOffset;
 			
         }
-				
-		//Store the terrain in a 32x128 tilemap chunk
-		for(uint8_t i = 0; i < y; i ++) // fill in blocks over the top block accordingly
-		{
-			if (chunk_map[CHUNK_WIDTH * i + x] < 1) //if the current tile isn't already defined; used for pregenerated features like trees
-				chunk_map[CHUNK_WIDTH * i + x] = AIR;
+		
+		y = (uint8_t)y;
+		
+		uint8_t dirtLayer = randInt(2,4);
+		
+		// Fill column with appropriate blocks
+		for(uint8_t i = 0; i < CHUNK_HEIGHT; i ++) {
+			
+			if ( i < y ) 
+			{
+				world_map[CHUNK_WIDTH * i + x + offset] = AIR;
+			} else
+			if ( i == y )
+			{
+				world_map[CHUNK_WIDTH * i + x + offset] = GRASS;
+			} else
+			if ( i < y + dirtLayer )
+			{
+				world_map[CHUNK_WIDTH * i + x + offset] = DIRT;
+			} else
+			if ( i < CHUNK_HEIGHT - 1 )
+			{
+				world_map[CHUNK_WIDTH * i + x + offset] = STONE;
+			} else
+			{
+				world_map[CHUNK_WIDTH * i + x + offset] = BEDROCK;
+			}
 				
 		}
 		
-		fillInTerrain(x, (uint8_t)y); // fill in blocks under the top block 
-		
     }  
-}
-void fillInTerrain(uint8_t x, uint8_t y)
-{
-	
-	uint8_t dirtLayer = randInt(2,4);
-	
-	chunk_map[CHUNK_WIDTH * y + x] = GRASS;
-	
-	for(uint8_t i = y + 1; i < y + dirtLayer; i ++)
-		chunk_map[CHUNK_WIDTH * i + x] = DIRT;
-	
-	for(uint8_t i = y + dirtLayer; i < CHUNK_HEIGHT; i ++)
-		chunk_map[CHUNK_WIDTH * i + x] = STONE;
-		
-	chunk_map[CHUNK_WIDTH* (CHUNK_HEIGHT - 1) +x] = BEDROCK;
 }
 
 float rand_0_1(void)
