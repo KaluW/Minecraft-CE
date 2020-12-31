@@ -1,11 +1,6 @@
 #ifndef DATA_H
 #define DATA_H
 
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <tice.h>
-
 #include "defines.h"
 
 #define NO_YIELD			0

@@ -1,9 +1,6 @@
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <tice.h>
-
+#include "defines.h"
 #include "player.h"
+#include "terrain.h"
 
 bool pressed_f1 = false;
 bool pressed_f2 = false;
@@ -22,21 +19,39 @@ bool pressed_up = false;
 bool allow_up_press = true;
 
 
-void updatePlayer() {
+void updatePlayer(void) {
 	
-	/*
+	// 1. Update controls
+	move_player();
 	
-	1. Update controls
+	// 2. Draw
 	
-	2. Draw
-	
-	3. Trigger interaction w/ terrain
+	/* 3. Trigger interaction w/ terrain
 		- Land/Water
 		- Falling/Jumping/Swimming
 		- Building/Destroying blocks
-			- Update inventory
-	
-	4. Trigger interaction w/ mob
-	
+		- Update inventory
 	*/
+	
+	// 4. Trigger interaction w/ mob
+	
+}
+
+void move_player(void)
+{
+	if (pressed_left)
+		if (player.x)
+			player.x -= TILE_WIDTH;
+
+	if (pressed_right)
+		if (player.x < (CHUNK_WIDTH * TILE_WIDTH) - (TILEMAP_DRAW_WIDTH * TILE_WIDTH))
+			player.x += TILE_WIDTH;
+
+	if (pressed_up)
+		if (player.y)
+			player.y -= TILE_HEIGHT;
+
+	if (pressed_down)
+		if (player.y < (CHUNK_HEIGHT * TILE_HEIGHT) - (TILEMAP_DRAW_HEIGHT * TILE_HEIGHT))
+			player.y += TILE_HEIGHT;
 }

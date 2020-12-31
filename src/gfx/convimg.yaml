@@ -8,6 +8,7 @@ palettes:
 converts:
   - name: tileset
     palette: palette
+    compress: zx7
     transparent-color-index: 0
     tilesets:
       tile-width: 16
@@ -27,6 +28,3 @@ outputs:
       - tileset
     palettes:
       - palette
-
-
-

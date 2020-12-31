@@ -1,8 +1,3 @@
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <tice.h>
-
 #include "mobs.h"
 
 void updateMobs(void) {

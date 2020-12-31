@@ -1,20 +1,17 @@
-#include <stdint.h>
 #include <graphx.h>
-#include <tice.h>
 #include <math.h>
-
-#include "terrain.h"
 
 #include "data.h"
 #include "defines.h"
 #include "images.h"
+#include "player.h"
+#include "terrain.h"
 
 // Store all the terrain here
 unsigned char world_map[CHUNK_WIDTH * CHUNK_HEIGHT * CHUNKS];
 
-	
-void updateTerrain(void) {
-	
+void updateTerrain(void)
+{
 	/*
 	
 	In the current chunk, check for changes in
@@ -24,17 +21,27 @@ void updateTerrain(void) {
 	- ...
 	
 	*/
+		
+	// Draw sky
+	gfx_FillScreen(1);
+		
+    /* Draw tilemap and coords */
+    gfx_TransparentTilemap(&tilemap, player.x, player.y);
+    gfx_FillRectangle(0, 0, 320, 16);
+    gfx_PrintStringXY("x offset:", 48, 4);
+    gfx_PrintUInt(player.x, 4);
+    gfx_PrintString(" y offset:");
+    gfx_PrintUInt(player.y, 4);
 }
 
-void generateWorld(void) {
-	
+void generateWorld(void)
+{
 	for(uint8_t i = 0; i < CHUNKS; i ++)
 		generateChunk(i * CHUNK_WIDTH * CHUNK_HEIGHT);
-	
 }
 
-void generateChunk(uint8_t offset) {
-		
+void generateChunk(uint8_t offset)
+{
 	uint8_t yOffset; // position up or down from "default" height of terrain - used to connect different chunks together;
 	
 	float y; // (x, y) determines the top block in a given column in the chunk modeled by the curve pattern
@@ -107,11 +114,11 @@ float randomize(float *z)
 	// for some reason if I use the #define directly, the chunk generation no longer works properly?
 	uint32_t M = LCG_M, A = LCG_A, C = LCG_C; 
 	
-	// I actually have no idea why this code does exactly what is does :P
+	// I actually have no idea why this code needs to do exactly what it does :P
 	float zd = *z - floor(*z);
 	*z = (A * (int)*z + C) % M + zd;
-	return (*z + zd) / (float)M - 0.5;
 
+	return (*z + zd) / (float)M - 0.5;
 }
  
 float interpolate(float pA, float pB, float pX)

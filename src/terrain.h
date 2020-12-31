@@ -1,15 +1,12 @@
 #ifndef TERRAIN_H
 #define TERRAIN_H
 
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <tice.h>
-
 #define CHUNK_WIDTH 	32
 #define CHUNK_HEIGHT	128
 
-#define CHUNKS 5
+#define CHUNKS 1
+
+extern unsigned char world_map[];
 
 void updateTerrain(void);
 

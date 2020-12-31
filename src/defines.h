@@ -1,10 +1,7 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <tice.h>
+#include <graphx.h>
 
 // constant members of the Linear Congruential Generator (LCG) - Used in randomizing terrain
 #define LCG_M 2147483648
@@ -18,11 +15,20 @@
 
 void missing_appvars(void);
 
-typedef struct {
-	
+extern gfx_tilemap_t tilemap;
+
+typedef struct
+{
+	uint8_t id;
+	uint8_t x_pos;
+	uint8_t y_pos;
+} chunk_t;
+
+typedef struct
+{
+	chunk_t chunk;
 	uint8_t time_of_day;
 	bool exit;
-	
 } game_t;
 
 extern game_t game;

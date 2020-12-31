@@ -1,8 +1,3 @@
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <tice.h>
-
 #include "data.h"
 
 // dead bushes are interesting. Treat it like a sheep, and it will drop a dead bush, otherwise 0-2 sticks. Baaaaa Baaaa Black Sheep...

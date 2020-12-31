@@ -1,8 +1,5 @@
-#include <stdlib.h>
-
 #include <graphx.h>
 #include <fileioc.h>
-#include <debug.h>
 
 #include "images.h"
 #include "defines.h"
