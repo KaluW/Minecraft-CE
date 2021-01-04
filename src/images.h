@@ -5,7 +5,7 @@
 
 #include "defines.h"
 
-extern gfx_sprite_t *tileset_tiles[MAX_BLOCK_TILE_COUNT];
+extern gfx_sprite_t* tileset_tiles[MAX_BLOCK_TILE_COUNT];
 
 void extract_tiles(void);
 

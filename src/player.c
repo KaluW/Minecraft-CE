@@ -20,21 +20,21 @@ bool allow_up_press = true;
 
 
 void updatePlayer(void) {
-	
+
 	// 1. Update controls
 	move_player();
-	
+
 	// 2. Draw
-	
+
 	/* 3. Trigger interaction w/ terrain
 		- Land/Water
 		- Falling/Jumping/Swimming
 		- Building/Destroying blocks
 		- Update inventory
 	*/
-	
+
 	// 4. Trigger interaction w/ mob
-	
+
 }
 
 void move_player(void)
@@ -44,7 +44,7 @@ void move_player(void)
 			player.x -= TILE_WIDTH;
 
 	if (pressed_right)
-		if (player.x < (CHUNK_WIDTH * TILE_WIDTH) - (TILEMAP_DRAW_WIDTH * TILE_WIDTH))
+		if (player.x < TILE_WIDTH * (CHUNK_WIDTH * CHUNKS - TILEMAP_DRAW_WIDTH))
 			player.x += TILE_WIDTH;
 
 	if (pressed_up)
@@ -52,6 +52,6 @@ void move_player(void)
 			player.y -= TILE_HEIGHT;
 
 	if (pressed_down)
-		if (player.y < (CHUNK_HEIGHT * TILE_HEIGHT) - (TILEMAP_DRAW_HEIGHT * TILE_HEIGHT))
+		if (player.y < TILE_HEIGHT * (CHUNK_HEIGHT - TILEMAP_DRAW_HEIGHT))
 			player.y += TILE_HEIGHT;
 }

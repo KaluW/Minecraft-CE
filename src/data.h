@@ -80,7 +80,7 @@
 
 enum tools { None, Axe, Pickaxe, Shovel, Shears };
 
-typedef struct {
+typedef struct Block {
 	
 	uint8_t yield; // Index of the item that it gives you when you break it.
 	uint8_t required_tool; // Required tool to successfully harvest item
