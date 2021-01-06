@@ -1,14 +1,13 @@
 #include "mobs.h"
 
-void updateMobs(void) {
-
+void updateMobs(void)
+{
 	spawnMobs();
 	handleMobs();
-
 }
 
-void spawnMobs() {
-
+void spawnMobs()
+{
 	/*
 
 	Add to a mob array. Probably should be some kind of number cap so if you stay in a chunk to build something,
@@ -17,11 +16,10 @@ void spawnMobs() {
 	Thinking like 32 mobs, its makeup depending on biome/light
 
 	*/
-
 }
 
-void handleMobs() {
-
+void handleMobs()
+{
 	/*
 
 	1. Check Despawn
@@ -34,5 +32,4 @@ void handleMobs() {
 	3. AI / Trigger Interactions
 
 	*/
-
 }

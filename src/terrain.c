@@ -29,33 +29,30 @@ void updateTerrain(void)
 	gfx_TransparentTilemap(&tilemap, player.x, player.y);
 	gfx_FillRectangle(0, 0, 320, 16);
 	gfx_PrintStringXY("x offset:", 48, 4);
-	gfx_PrintUInt(player.x, 4);
+	gfx_PrintUInt(player.x / TILE_WIDTH, 3);
 	gfx_PrintString(" y offset:");
-	gfx_PrintUInt(player.y, 4);
+	gfx_PrintUInt(player.y / TILE_HEIGHT, 2);
 }
 
 void generateWorld(void)
 {
-	// uint8_t yOffset = randInt(CHUNK_HEIGHT / 4, CHUNK_HEIGHT * 3 / 4); // starting "height" of terrain
+	// starting "height" of terrain; adjust start_y every new chunk to connect them together
+	uint8_t start_y = randInt(CHUNK_HEIGHT / 4, CHUNK_HEIGHT * 3 / 4);
 
 	for (uint8_t i = 0; i < CHUNKS; i++)
-		generateChunk(i);
+		generateChunk(i, &start_y);
 }
 
-void generateChunk(uint8_t chunkOffset)
+void generateChunk(uint8_t chunkOffset, uint8_t* start_y)
 {
-	uint8_t yOffset = CHUNK_HEIGHT / 2; // position up or down from "default" height of terrain - used to connect different chunks together;
-
-	float y; // (x, y) determines the top block in a given column in the chunk modeled by the curve pattern
-	float pA, pB, z; // interpolate curve line between 'pA' (point A) and 'pB' (point B) using random 'z'
+	float y; // (x, y) determines the top block of terrain in a given column in the chunk modeled by the curve pattern
+	float pA, pB, z; // interpolate curve line between 'pA' and 'pB' using seed 'z'
 	uint8_t amp = randInt(2, 12), wl = randInt(1, 10); // amplitude and wavelength
 
-	// y = CHUNK_HEIGHT;
+	z = rand_0_1() * LCG_M; // starting seed value
 
-	z = rand_0_1() * LCG_M;
-	pA = randomize(&z);
-	pB = randomize(&z);
-
+	pA = lcg(&z);
+	pB = lcg(&z);
 
 	for (uint8_t x = 0; x < CHUNK_WIDTH; x++) // Go through each 'x' column in chunk and fill in terrain accordingly
 	{
@@ -63,15 +60,13 @@ void generateChunk(uint8_t chunkOffset)
 		{
 			// Randomize curve shape after every period
 			pA = pB;
-			pB = randomize(&z);
-			y = CHUNK_HEIGHT + pA * amp - yOffset;
-
+			pB = lcg(&z);
+			y = CHUNK_HEIGHT + pA * amp - *start_y;
 		}
 		else
 		{
 			// model top block in terrain along curve shape
-			y = CHUNK_HEIGHT + interpolate(pA, pB, ((x % wl) / (float)wl)) * amp - yOffset;
-
+			y = CHUNK_HEIGHT + interpolate(pA, pB, ((x % wl) / (float)wl)) * amp - *start_y;
 		}
 
 		y = (uint8_t)y;
@@ -79,7 +74,7 @@ void generateChunk(uint8_t chunkOffset)
 		uint8_t dirtLayer = randInt(2, 4);
 		uint8_t* tile;
 
-		// Fill column with appropriate blocks
+		// Fill column with appropriate blocks - will probably end up making this its own function as complexity of chunk generation increases
 		for (uint8_t i = 0; i < CHUNK_HEIGHT; i++) {
 
 			tile = &world_map[i * CHUNK_WIDTH * CHUNKS + x + chunkOffset * CHUNK_WIDTH];
@@ -101,8 +96,10 @@ void generateChunk(uint8_t chunkOffset)
 			}
 
 		}
-
 	}
+
+	// adjust new start_y for next chunk so as to makes ends of chunks look seamless
+	*start_y = CHUNK_HEIGHT - y;
 }
 
 float rand_0_1(void)
@@ -110,12 +107,13 @@ float rand_0_1(void)
 	return (float)rand() / ((float)RAND_MAX + 1);
 }
 
-float randomize(float* z)
+float lcg(float* z)
 {
-	// for some reason if I use the #define directly, the chunk generation no longer works properly?
-	uint32_t M = LCG_M, A = LCG_A, C = LCG_C;
+	// For some reason I can't directly use the #defines directly?
+	uint32_t M = LCG_M;
+	uint32_t A = LCG_A;
+	uint32_t C = LCG_C;
 
-	// I actually have no idea why this code needs to do exactly what it does :P
 	float zd = *z - floor(*z);
 	*z = (A * (int)*z + C) % M + zd;
 
